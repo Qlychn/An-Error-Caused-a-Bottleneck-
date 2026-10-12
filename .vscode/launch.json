@@ -6,7 +6,9 @@
             "name": "Launch Game",
             "request": "launch",
             "mainClass": "Main",
-            "projectName": "an-error-caused-a-bottleneck"
+            "projectName": "an-error-caused-a-bottleneck",
+            "vmArgs": "--enable-native-access=ALL-UNNAMED"
         }
     ]
 }
+
