@@ -52,3 +52,6 @@ classpath:C:\Users\Daivik\.m2\repository\org\lwjgl\lwjgl-stb\3.3.3\lwjgl-stb-3.3
 classpath:C:\Users\Daivik\.m2\repository\com\badlogicgames\jlayer\jlayer\1.0.1-gdx\jlayer-1.0.1-gdx.jar	89845:1791812546647
 classpath:C:\Users\Daivik\.m2\repository\org\jcraft\jorbis\0.0.17\jorbis-0.0.17.jar	99701:1791812546737
 classpath:C:\Users\Daivik\.m2\repository\com\badlogicgames\gdx\gdx-platform\1.12.1\gdx-platform-1.12.1-natives-desktop.jar	483136:1791812546781
+classpath:C:\Users\Daivik\.m2\repository\com\googlecode\json-simple\json-simple\1.1.1\json-simple-1.1.1.jar	23931:1791880348277
+classpath:C:\Users\Daivik\.m2\repository\junit\junit\4.10\junit-4.10.jar	253160:1791880348514
+classpath:C:\Users\Daivik\.m2\repository\org\hamcrest\hamcrest-core\1.1\hamcrest-core-1.1.jar	76643:1791880348401

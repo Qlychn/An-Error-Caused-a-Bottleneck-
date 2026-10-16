@@ -1,3 +1,11 @@
+
+<!-- pom.xml template taken from Pravins "A beginner’s guide to pom.xml and Maven" -->
+<!-- https://medium.com/@pravinmuruganantham123/a-beginners-guide-to-pom-xml-and-maven-0c2680bc347d -->
+<!-- libGDX dependencies taken from the libGDX wiki -->
+<!-- https://libgdx.com/wiki/articles/maven-integration -->
+<!-- JSON In Java dependency 20260814 ver. taken from mvnrepository.com -->
+<!-- https://mvnrepository.com/artifact/org.json/json/20260814 -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>dev.loafcode</groupId>
@@ -47,5 +55,14 @@
             <version>${gdx.version}</version>
             <classifier>natives-desktop</classifier>
         </dependency>
+
+        <!-- Source: https://mvnrepository.com/artifact/org.json/json -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20260814</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 </project>
