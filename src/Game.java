@@ -22,6 +22,8 @@ public class Game implements ApplicationListener {
     private SpriteBatch batch;
     private BitmapFont font;
     private OrthographicCamera camera;
+    
+    private User playerUser;
 
     public static ExtendViewport viewport;
     private Texture node;
@@ -47,6 +49,8 @@ public class Game implements ApplicationListener {
         font = new BitmapFont();
         font.getData().setScale(3f);
 
+        playerUser = new User("Player", 100f, 1f, 0.1f, 5f);
+
         TextButtonStyle textButtonStyle = new TextButtonStyle();
         textButtonStyle.pressedOffsetX = 1;
         textButtonStyle.pressedOffsetY = -1;
@@ -54,6 +58,7 @@ public class Game implements ApplicationListener {
 
         node = new Texture("src/assets/placeholderNode.png");
         exit = new TextButton("Exit", textButtonStyle);
+        
     }
 
     @Override
