@@ -95,5 +95,6 @@ public class Game implements ApplicationListener {
         if (batch != null) batch.dispose();
         if (font != null) font.dispose();
         if (node != null) node.dispose(); 
+        PlaceholderNode.disposeTexture(); // ADDED to dispose texture after the game is closed, kek
     }
 }
