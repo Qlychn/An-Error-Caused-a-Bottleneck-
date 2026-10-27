@@ -24,6 +24,7 @@ public class Game implements ApplicationListener {
     private OrthographicCamera camera;
     
     private User playerUser;
+    private MainMenuUI menu;
 
     public static ExtendViewport viewport;
     private Texture node;
@@ -58,12 +59,15 @@ public class Game implements ApplicationListener {
 
         node = new Texture("src/assets/placeholderNode.png");
         exit = new TextButton("Exit", textButtonStyle);
-        
+
+        menu = new MainMenuUI(batch);
+        menu.NodeMainUI(); // show the main menu on startup
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, false);
+        if (menu != null) menu.resize(width, height);
     }
 
     @Override
@@ -81,6 +85,10 @@ public class Game implements ApplicationListener {
         font.draw(batch, "abcdefghijlmnopqlstuvwxyz 0123456789", WORLD_WIDTH/2 - 450, WORLD_HEIGHT/2 + 200);
         batch.draw(node, WORLD_WIDTH/2 - node.getWidth() / 2f, WORLD_HEIGHT/2 - node.getHeight() / 2f);
         batch.end();
+
+        menu.render(Gdx.graphics.getDeltaTime());
+        // ESC brings the menu back once it has been closed (Start). Remove if ya don want(mi use this cuz mi no use mouse).
+        if (!menu.isLoaded() && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) menu.NodeMainUI();
     }
 
     @Override
@@ -100,6 +108,7 @@ public class Game implements ApplicationListener {
         if (batch != null) batch.dispose();
         if (font != null) font.dispose();
         if (node != null) node.dispose(); 
+        if (menu != null) menu.dispose();
         PlaceholderNode.disposeTexture(); // ADDED to dispose texture after the game is closed, kek
     }
 }
