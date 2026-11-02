@@ -9,7 +9,6 @@ import com.badlogic.gdx.Graphics.Monitor;
 public class Main {
     public static void main(String[] args) {
 
-        Monitor[] monitors = Lwjgl3ApplicationConfiguration.getMonitors();
         DisplayMode primaryMode = Lwjgl3ApplicationConfiguration.getDisplayMode();
 
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();

@@ -1,0 +1,28 @@
+
+skin.png
+size: 256, 256
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+9Patch
+  rotate: false
+  xy: 1, 4
+  size: 27, 27
+  split: 3, 3, 4, 4
+  orig: 27, 27
+  offset: 0, 0
+  index: -1
+Screenshot 2026-10-31 221346
+  rotate: false
+  xy: 1, 33
+  size: 227, 222
+  orig: 227, 222
+  offset: 0, 0
+  index: -1
+white-pixel
+  rotate: false
+  xy: 1, 1
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1

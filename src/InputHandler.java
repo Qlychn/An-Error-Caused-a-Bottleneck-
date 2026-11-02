@@ -1,3 +1,4 @@
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 
@@ -10,7 +11,14 @@ public class InputHandler extends InputAdapter {
    }
 
    public boolean keyUp (int keycode) {
-      return false;
+      if (keycode == Input.Keys.ESCAPE){
+         if (Game.menu.isLoaded()){
+            Game.menu.unloadMainMenu();
+         } else{
+            Game.menu.loadMainMenu();
+         }
+      }
+      return true;
    }
 
    public boolean keyTyped (char character) {
@@ -18,7 +26,7 @@ public class InputHandler extends InputAdapter {
    }
 
    public boolean touchDown(int x, int y, int pointer, int button) {
-      CamControls.camPanStart(Game.viewport, x, y);
+      CamControls.camPanStart(Game.gameViewport, x, y);
       return true;
    }
 

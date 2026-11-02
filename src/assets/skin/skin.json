@@ -1,0 +1,58 @@
+{
+com.badlogic.gdx.graphics.Color: {
+	RGBA_0_0_0_255: {
+		r: 1
+		g: 1
+		b: 1
+		a: 1
+	}
+	RGBA_255_0_0_255: {
+		r: 1
+		g: 0
+		b: 0
+		a: 1
+	}
+}
+com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable: {
+	Screenshot 2026-10-31 221346: {
+		region: Screenshot 2026-10-31 221346
+		minWidth: 20
+		minHeight: 20
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
+	red: {
+		name: white-pixel
+		color: RGBA_255_0_0_255
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
+	default: {
+		font: Placeholder
+		fontColorSelected: RGBA_0_0_0_255
+		fontColorUnselected: RGBA_0_0_0_255
+		selection: Screenshot 2026-10-31 221346
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		background: 9Patch
+		hScroll: Screenshot 2026-10-31 221346
+		vScroll: Screenshot 2026-10-31 221346
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
+	default: {
+		font: Placeholder
+		fontColor: RGBA_0_0_0_255
+		scrollStyle: default
+		listStyle: default
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+	default-horizontal: {
+		background: 9Patch
+		knob: Screenshot 2026-10-31 221346
+	}
+}
+}
