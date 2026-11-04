@@ -21,7 +21,8 @@ public class MainMenuUI {
     private Table mainMenuTable;
     private Table optionsTable;
     private Table libraryTable;
-    boolean showing = true;
+    boolean mainMenuShowing = true;
+    boolean optionsShowing = false;
 
     private int masterVol = 100;    
     private int sfxVol = 100;
@@ -70,8 +71,13 @@ public class MainMenuUI {
 
         optionsButton.addListener(new ChangeListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-               loadOptionsMenu();
+            public void changed(ChangeEvent                                             event, Actor actor) {
+               if (optionsShowing == true){
+                unloadOptionsMenu();
+               }else{
+                loadOptionsMenu();
+               }
+
             }
         });
 
@@ -223,10 +229,12 @@ public class MainMenuUI {
 
     public void loadOptionsMenu(){
         uiStage.addActor(optionsTable);
+        optionsShowing = true;
     }
 
     public void unloadOptionsMenu(){
         optionsTable.remove();
+        optionsShowing = false;
     }
 
     public void initLibrary(){
@@ -271,17 +279,17 @@ public class MainMenuUI {
         Game.multiplexer.removeProcessor(Game.inputHandler);
         Game.multiplexer.addProcessor(Game.uiStage);
         uiStage.addActor(mainMenuTable);
-        showing = true;
+        mainMenuShowing = true;
     }
 
     public void unloadMainMenu(){
         Game.multiplexer.removeProcessor(Game.uiStage);
         Game.multiplexer.addProcessor(Game.inputHandler);
         mainMenuTable.remove();
-        showing = false;
+        mainMenuShowing = false;
     }
 
     public boolean isLoaded(){
-        return showing;
+        return mainMenuShowing;
     }
 }
