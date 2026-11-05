@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -30,6 +29,10 @@ public class Game implements ApplicationListener {
     public static InputHandler inputHandler;
     public static InputMultiplexer multiplexer;
 
+    private Texture overlayTexture;
+
+    private Vector2 playerPosition;
+    private Texture playerTexture;
 
     public static ExtendViewport gameViewport;
     public static ExtendViewport mainMenuViewport;
@@ -71,6 +74,16 @@ public class Game implements ApplicationListener {
 
         node = new Texture("src/assets/placeholderNode.png");
 
+        playerUser = new User("Player", 100f, 1f, 0.1f, 5f);
+        playerPosition = new Vector2(WORLD_WIDTH / 2f - 300, WORLD_HEIGHT / 2f); // Spawn to the left of the center node
+        playerTexture = new Texture("src/assets/placeholderUser.png");
+
+        com.badlogic.gdx.graphics.Pixmap pixmap = new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+        pixmap.setColor(1f, 1f, 1f, 1f); // Solid white
+        pixmap.fill();
+        overlayTexture = new Texture(pixmap);
+        pixmap.dispose();
+
         menu = new MainMenuUI(uiStage, font);
         menu.loadMainMenu();
     }
@@ -84,14 +97,33 @@ public class Game implements ApplicationListener {
 
     @Override
     public void render() {
+        float dt = Gdx.graphics.getDeltaTime();
 
         Gdx.gl.glClearColor(0, 0, 0.05f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Actual Game rendering ----------------------------------------------------------
         CamControls.mainCamZoomHandler(playCamera, baseGameZoom);  
-        CamControls.mainCamPanHandler(playCamera, gameViewport);     
+        CamControls.mainCamPanHandler(playCamera, gameViewport);
+        playCamera.update();
+        playerUser.update(dt);
+
         gameViewport.apply();                                      
+        batch.setProjectionMatrix(playCamera.combined);
+
+        batch.begin();
+        font.draw(batch, "abcdefghijlmnopqlstuvwxyz 0123456789", WORLD_WIDTH/2 - 450, WORLD_HEIGHT/2 + 200);
+        batch.draw(node, WORLD_WIDTH/2f - node.getWidth() / 2f, WORLD_HEIGHT/2f - node.getHeight() / 2f);
+        batch.draw(playerTexture, playerPosition.x, playerPosition.y);
+        batch.end();
+
+        mainMenuViewport.apply();
+        uiStage.act(dt);
+        uiStage.draw();
+
+        CamControls.mainCamZoomHandler(playCamera, baseGameZoom);  
+        CamControls.mainCamPanHandler(playCamera, gameViewport);    
+        gameViewport.apply();                                        
         batch.setProjectionMatrix(playCamera.combined);
 
         batch.begin();
@@ -100,7 +132,23 @@ public class Game implements ApplicationListener {
         batch.end();
 
         mainMenuViewport.apply();
-        uiStage.act(Gdx.graphics.getDeltaTime());
+        
+        float deltaTime = Gdx.graphics.getDeltaTime();
+        playerUser.update(deltaTime);
+
+        batch.setProjectionMatrix(uiCamera.combined);
+        batch.begin();
+        
+        font.draw(batch, "Player Rating: " + playerUser.getRating() + " | Patience: " + playerUser.getPatience(), 20, gameResolution[1] - 20);
+        batch.draw(node, WORLD_WIDTH/2 - node.getWidth() / 2f, WORLD_HEIGHT/2 - node.getHeight() / 2f);
+        batch.draw(playerTexture, playerPosition.x, playerPosition.y);
+        batch.enableBlending();
+        batch.setColor(1f, 1f, 1f, 0.3f); 
+        batch.draw(overlayTexture, 0, 0, gameResolution[0], gameResolution[1]);
+        batch.setColor(1f, 1f, 1f, 1f); 
+        batch.end();
+
+        uiStage.act(dt);
         uiStage.draw();
 
         //menu.render(Gdx.graphics.getDeltaTime());
@@ -125,7 +173,9 @@ public class Game implements ApplicationListener {
         if (batch != null) batch.dispose();
         if (font != null) font.dispose();
         if (node != null) node.dispose(); 
+        if (playerTexture != null) playerTexture.dispose();
         if (uiStage != null) uiStage.dispose();
+        if (overlayTexture != null) overlayTexture.dispose();
         PlaceholderNode.disposeTexture(); // ADDED to dispose texture after the game is closed, kek
     }
 }
