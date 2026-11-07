@@ -1,5 +1,7 @@
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -51,6 +53,20 @@ public abstract class Node {
     }
 
     // ------------------------------------------------------------- functions
+
+    /**
+     * Draws the node CENTERED on (x, y), size x size world units. Call between batch.begin()/end()
+     * with the world camera's projection. Broken nodes are tinted red. The texture is NOT owned by the
+     * node (subclasses share it), so there is nothing to dispose here.
+     */
+    public void draw(SpriteBatch batch) {
+        if (texture == null) return;
+        float previous = batch.getPackedColor();
+        batch.setColor(broken ? Color.RED : Color.WHITE);
+        batch.draw(texture, x - size / 2f, y - size / 2f, size, size);
+        batch.setPackedColor(previous);
+    }
+
     public void simulateError(float errorRate, float stability) {
     }
 

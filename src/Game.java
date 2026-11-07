@@ -1,4 +1,6 @@
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -25,7 +27,15 @@ public class Game implements ApplicationListener {
     private OrthographicCamera playCamera;
     private OrthographicCamera uiCamera;
     
+    private Texture pixel;                      // 1x1 white, used to draw the links between nodes
+    private WorldBackground background;         // animated, covers the whole world
+    private PlaceholderNode[] nodes;
     private User playerUser;
+    // The user walks node -> node so Node, PlaceholderNode and User are all exercised together.
+    private final Vector2 userPos = new Vector2();
+    private final Vector2 userTargetPos = new Vector2();
+    private int userTarget = 0;
+
     public static MainMenuUI menu;
     public static InputHandler inputHandler;
     public static InputMultiplexer multiplexer;
@@ -35,13 +45,19 @@ public class Game implements ApplicationListener {
     public static ExtendViewport mainMenuViewport;
 
     public static Stage uiStage;
-    private Texture node;
     private TextButton exit;
 
     static public int[] gameResolution = {1920,1080};
     static public float baseGameZoom = 3;
     static final int WORLD_WIDTH = gameResolution[0] * 10;
     static final int WORLD_HEIGHT = gameResolution[1] * 10;
+
+    private static final float NODE_RING_RADIUS = 900f;
+    private static final int NODE_COUNT = 3;
+    private static final float USER_DRAW_SIZE = 110f;
+    private static final float USER_SPEED_SCALE = 60f;   // User.speed is "units per tick";
+    private static final float LINK_THICKNESS = 10f;
+    private static final Color LINK_COLOR = new Color(0.72f, 0.58f, 1f, 0.55f);
 
     @Override
     public void create() {
@@ -67,12 +83,40 @@ public class Game implements ApplicationListener {
         multiplexer = new InputMultiplexer();
         Gdx.input.setInputProcessor(multiplexer);;
 
-        playerUser = new User("Player", 100f, 1f, 0.1f, 5f);
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+        pixel = new Texture(pixmap);
+        pixmap.dispose();
 
-        node = new Texture("src/assets/placeholderNode.png");
+        background = new WorldBackground(WORLD_WIDTH, WORLD_HEIGHT);
+
+        // ---- Checking if it works. And it does (temporary)
+        nodes = new PlaceholderNode[NODE_COUNT];
+        for (int i = 0; i < NODE_COUNT; i++) {
+            float angle = 90f + i * (360f / NODE_COUNT);
+            nodes[i] = new PlaceholderNode(
+                    WORLD_WIDTH / 2f + MathUtils.cosDeg(angle) * NODE_RING_RADIUS,
+                    WORLD_HEIGHT / 2f + MathUtils.sinDeg(angle) * NODE_RING_RADIUS);
+        }
+        for (int i = 0; i < NODE_COUNT; i++) {
+            nodes[i].setConnection(0, nodes[(i + 1) % NODE_COUNT]);
+            nodes[i].setConnection(1, nodes[(i + NODE_COUNT - 1) % NODE_COUNT]);
+        }
+
+        // ---- user
+        playerUser = new User("Player", 100f, 1f, 0.1f, 5f);
+        userPos.set(nodes[0].getX(), nodes[0].getY());
+        pickNextTarget();
 
         menu = new MainMenuUI(uiStage, font);
         menu.loadMainMenu();
+    }
+
+    /** Sends the user to the next node in the ring. */
+    private void pickNextTarget() {
+        userTarget = (userTarget + 1) % NODE_COUNT;
+        userTargetPos.set(nodes[userTarget].getX(), nodes[userTarget].getY());
     }
 
     @Override
@@ -84,6 +128,15 @@ public class Game implements ApplicationListener {
 
     @Override
     public void render() {
+        float delta = Gdx.graphics.getDeltaTime();
+
+        // ---- update (the background keeps moving behind the menu, the game itself waits for Start)
+        background.update(delta);
+        if (!menu.isLoaded()) {
+            playerUser.update(delta);
+            playerUser.moveNode(userPos, userTargetPos, playerUser.getSpeed() * USER_SPEED_SCALE * delta);
+            if (userPos.epsilonEquals(userTargetPos)) pickNextTarget();
+        }
 
         Gdx.gl.glClearColor(0, 0, 0.05f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -95,8 +148,22 @@ public class Game implements ApplicationListener {
         batch.setProjectionMatrix(playCamera.combined);
 
         batch.begin();
+        background.draw(batch);
+
+        for (int i = 0; i < NODE_COUNT; i++) {
+            drawLink(nodes[i], nodes[(i + 1) % NODE_COUNT]);
+        }
+        for (PlaceholderNode placeholderNode : nodes) {
+            placeholderNode.draw(batch);
+        }
+
+        Texture userTexture = playerUser.getUserPlaceholderTexture();
+        if (userTexture != null) {
+            batch.draw(userTexture, userPos.x - USER_DRAW_SIZE / 2f, userPos.y - USER_DRAW_SIZE / 2f,
+                    USER_DRAW_SIZE, USER_DRAW_SIZE);
+        }
+
         font.draw(batch, "abcdefghijlmnopqlstuvwxyz 0123456789", WORLD_WIDTH/2 - 450, WORLD_HEIGHT/2 + 200);
-        batch.draw(node, WORLD_WIDTH/2 - node.getWidth() / 2f, WORLD_HEIGHT/2 - node.getHeight() / 2f);
         batch.end();
 
         mainMenuViewport.apply();
@@ -106,6 +173,18 @@ public class Game implements ApplicationListener {
         //menu.render(Gdx.graphics.getDeltaTime());
         // ESC brings the menu back once it has been closed (Start). Remove if ya don want(mi use this cuz mi no use mouse).
         //if (!menu.isLoaded() && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) menu.NodeMainUI();
+    }
+
+    /** Draws a thick line between two nodes using the 1x1 pixel texture. */
+    private void drawLink(Node a, Node b) {
+        float dx = b.getX() - a.getX();
+        float dy = b.getY() - a.getY();
+        float length = (float) Math.sqrt(dx * dx + dy * dy);
+        float angle = MathUtils.atan2(dy, dx) * MathUtils.radiansToDegrees;
+        batch.setColor(LINK_COLOR);
+        batch.draw(pixel, a.getX(), a.getY() - LINK_THICKNESS / 2f, 0f, LINK_THICKNESS / 2f,
+                length, LINK_THICKNESS, 1f, 1f, angle, 0, 0, 1, 1, false, false);
+        batch.setColor(Color.WHITE);
     }
 
     @Override
@@ -124,7 +203,10 @@ public class Game implements ApplicationListener {
         // NAGCRASH LAPTOP HABANG NAGLALARO KO DAHIL NG MEMORY LEAK, PANALO SANA - Qly
         if (batch != null) batch.dispose();
         if (font != null) font.dispose();
-        if (node != null) node.dispose(); 
+        if (pixel != null) pixel.dispose();
+        if (background != null) background.dispose();
+        if (playerUser != null) playerUser.dispose();
+        if (menu != null) menu.dispose();
         if (uiStage != null) uiStage.dispose();
         PlaceholderNode.disposeTexture(); // ADDED to dispose texture after the game is closed, kek
     }
