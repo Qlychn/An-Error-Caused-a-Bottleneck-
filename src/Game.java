@@ -1,4 +1,3 @@
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -23,13 +22,13 @@ public class Game implements ApplicationListener {
     private BitmapFont font;
     private OrthographicCamera playCamera;
     private OrthographicCamera uiCamera;
-    
+
     private User playerUser;
     public static MainMenuUI menu;
     public static InputHandler inputHandler;
     public static InputMultiplexer multiplexer;
 
-    private Texture overlayTexture;
+    private Background background;
 
     private Vector2 playerPosition;
     private Texture playerTexture;
@@ -65,24 +64,19 @@ public class Game implements ApplicationListener {
         font.getData().setScale(3f);
 
         uiStage = new Stage(mainMenuViewport, batch);
-        
+
         inputHandler = new InputHandler();
         multiplexer = new InputMultiplexer();
-        Gdx.input.setInputProcessor(multiplexer);;
+        Gdx.input.setInputProcessor(multiplexer);
+
+        background = new Background(0, 0, 0.05f, 1);
 
         playerUser = new User("Player", 100f, 1f, 0.1f, 5f);
 
         node = new Texture("src/assets/placeholderNode.png");
 
-        playerUser = new User("Player", 100f, 1f, 0.1f, 5f);
         playerPosition = new Vector2(WORLD_WIDTH / 2f - 300, WORLD_HEIGHT / 2f); // Spawn to the left of the center node
         playerTexture = new Texture("src/assets/placeholderUser.png");
-
-        com.badlogic.gdx.graphics.Pixmap pixmap = new com.badlogic.gdx.graphics.Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
-        pixmap.setColor(1f, 1f, 1f, 1f); // Solid white
-        pixmap.fill();
-        overlayTexture = new Texture(pixmap);
-        pixmap.dispose();
 
         menu = new MainMenuUI(uiStage, font);
         menu.loadMainMenu();
@@ -99,55 +93,34 @@ public class Game implements ApplicationListener {
     public void render() {
         float dt = Gdx.graphics.getDeltaTime();
 
-        Gdx.gl.glClearColor(0, 0, 0.05f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // Actual Game rendering ----------------------------------------------------------
-        CamControls.mainCamZoomHandler(playCamera, baseGameZoom);  
+        // Update
+        CamControls.mainCamZoomHandler(playCamera, baseGameZoom);
         CamControls.mainCamPanHandler(playCamera, gameViewport);
         playCamera.update();
         playerUser.update(dt);
 
-        gameViewport.apply();                                      
-        batch.setProjectionMatrix(playCamera.combined);
+        // Background (clears the screen)
+        background.render();
 
+        // World
+        gameViewport.apply();
+        batch.setProjectionMatrix(playCamera.combined);
         batch.begin();
-        font.draw(batch, "abcdefghijlmnopqlstuvwxyz 0123456789", WORLD_WIDTH/2 - 450, WORLD_HEIGHT/2 + 200);
-        batch.draw(node, WORLD_WIDTH/2f - node.getWidth() / 2f, WORLD_HEIGHT/2f - node.getHeight() / 2f);
+        font.draw(batch, "abcdefghijklmnopqrstuvwxyz 0123456789", WORLD_WIDTH / 2f - 450, WORLD_HEIGHT / 2f + 200);
+        batch.draw(node, WORLD_WIDTH / 2f - node.getWidth() / 2f, WORLD_HEIGHT / 2f - node.getHeight() / 2f);
         batch.draw(playerTexture, playerPosition.x, playerPosition.y);
         batch.end();
 
+        // HUD + overlay (UI space)
         mainMenuViewport.apply();
-        uiStage.act(dt);
-        uiStage.draw();
-
-        CamControls.mainCamZoomHandler(playCamera, baseGameZoom);  
-        CamControls.mainCamPanHandler(playCamera, gameViewport);    
-        gameViewport.apply();                                        
-        batch.setProjectionMatrix(playCamera.combined);
-
-        batch.begin();
-        font.draw(batch, "abcdefghijlmnopqlstuvwxyz 0123456789", WORLD_WIDTH/2 - 450, WORLD_HEIGHT/2 + 200);
-        batch.draw(node, WORLD_WIDTH/2 - node.getWidth() / 2f, WORLD_HEIGHT/2 - node.getHeight() / 2f);
-        batch.end();
-
-        mainMenuViewport.apply();
-        
-        float deltaTime = Gdx.graphics.getDeltaTime();
-        playerUser.update(deltaTime);
-
         batch.setProjectionMatrix(uiCamera.combined);
         batch.begin();
-        
-        font.draw(batch, "Player Rating: " + playerUser.getRating() + " | Patience: " + playerUser.getPatience(), 20, gameResolution[1] - 20);
-        batch.draw(node, WORLD_WIDTH/2 - node.getWidth() / 2f, WORLD_HEIGHT/2 - node.getHeight() / 2f);
-        batch.draw(playerTexture, playerPosition.x, playerPosition.y);
-        batch.enableBlending();
-        batch.setColor(1f, 1f, 1f, 0.3f); 
-        batch.draw(overlayTexture, 0, 0, gameResolution[0], gameResolution[1]);
-        batch.setColor(1f, 1f, 1f, 1f); 
+        font.draw(batch, "Player Rating: " + playerUser.getRating() + " | Patience: " + playerUser.getPatience(),
+                  20, gameResolution[1] - 20);
+        background.drawOverlay(batch, mainMenuViewport.getWorldWidth(), mainMenuViewport.getWorldHeight());
         batch.end();
 
+        // Menu / stage on top
         uiStage.act(dt);
         uiStage.draw();
 
@@ -167,15 +140,15 @@ public class Game implements ApplicationListener {
     }
 
     @Override
-    public void dispose() { 
+    public void dispose() {
         // PLEASE ENSURE YOU DISPOSE THE STUFF YOU MAKE
         // NAGCRASH LAPTOP HABANG NAGLALARO KO DAHIL NG MEMORY LEAK, PANALO SANA - Qly
         if (batch != null) batch.dispose();
         if (font != null) font.dispose();
-        if (node != null) node.dispose(); 
+        if (node != null) node.dispose();
         if (playerTexture != null) playerTexture.dispose();
         if (uiStage != null) uiStage.dispose();
-        if (overlayTexture != null) overlayTexture.dispose();
+        if (background != null) background.dispose();
         PlaceholderNode.disposeTexture(); // ADDED to dispose texture after the game is closed, kek
     }
 }
