@@ -284,4 +284,9 @@ public class MainMenuUI {
     public boolean isLoaded(){
         return showing;
     }
+
+    public void dispose(){
+        skin.remove("Placeholder", BitmapFont.class);
+        skin.dispose();
+    }
 }

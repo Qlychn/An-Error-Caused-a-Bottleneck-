@@ -27,6 +27,17 @@ public class User {
         this.userPlaceholderTexture = userPlaceholderTexture;
     }
 
+    public Texture getUserPlaceholderTexture() {
+        return userPlaceholderTexture;
+    }
+
+    public void dispose() {
+        if (userPlaceholderTexture != null) {
+            userPlaceholderTexture.dispose();
+            userPlaceholderTexture = null;
+        }
+    }
+
     // Method to move a node towards a target position
     public void moveNode(Vector2 currentNode, Vector2 targetNode, float speed) {
         Vector2 direction = targetNode.cpy().sub(currentNode);

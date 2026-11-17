@@ -7,8 +7,10 @@
             "request": "launch",
             "mainClass": "Main",
             "projectName": "an-error-caused-a-bottleneck",
-            "vmArgs": "--enable-native-access=ALL-UNNAMED"
+            "vmArgs": "--enable-native-access=ALL-UNNAMED",
+            "osx": {
+                "vmArgs": "--enable-native-access=ALL-UNNAMED -XstartOnFirstThread"
+            }
         }
     ]
 }
-
