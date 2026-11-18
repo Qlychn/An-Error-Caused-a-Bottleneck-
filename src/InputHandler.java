@@ -48,13 +48,13 @@ public class InputHandler extends InputAdapter {
     @Override
     public boolean scrolled(float amountX, float amountY) {
         /*if (amountY > 0) {
-            System.out.println("Scrolled Down: " + amountY);
+            Syste       m.out.println("Scrolled Down: " + amountY);
         } else if (amountY < 0) {
 
         } */
 
         CamControls.camZoomChange(amountY);
         
-        return true; // Return true to signal that the event has been handled
+        return true;
     }
 }
