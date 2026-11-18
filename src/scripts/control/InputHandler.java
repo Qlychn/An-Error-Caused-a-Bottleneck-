@@ -15,14 +15,14 @@ public class InputHandler extends InputAdapter {
    }
 
    public boolean keyUp (int keycode) {
-      if (keycode == Input.Keys.ESCAPE){
+      if (keycode == Input.Keys.ESCAPE){ 
          if (Game.menu.isLoaded()){
             Game.menu.unloadMainMenu();
          } else{
             Game.menu.loadMainMenu();
          }
       }
-      return true;
+      return true; 
    }
 
    public boolean keyTyped (char character) {

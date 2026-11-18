@@ -7,15 +7,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 
-import scripts.builders.MainMenuBuilder;
 import scripts.control.CamControls;
 import scripts.control.InputHandler;
+import scripts.control.MainMenuUI;
 import scripts.game.gameObjects.PlaceholderNode;
 import scripts.game.gameObjects.User;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-
 // The use of most imports were found out through the official libGDX wiki/documemtation and gitHub
  
  
@@ -27,7 +26,7 @@ public class Game implements ApplicationListener {
     private OrthographicCamera uiCamera;
     
     private User playerUser;
-    public static MainMenuBuilder menu;
+    public static MainMenuUI menu;
     public static InputHandler inputHandler;
     public static InputMultiplexer multiplexer;
  
@@ -71,7 +70,7 @@ public class Game implements ApplicationListener {
         //playerUser = new User("Player", 100f, 1f, 0.1f, 5f);
         node = new Texture("src/assets/placeholderNode.png");
  
-        menu = new MainMenuBuilder(uiStage, font);
+        menu = new MainMenuUI(uiStage, font);
         menu.loadMainMenu();
     }
  
