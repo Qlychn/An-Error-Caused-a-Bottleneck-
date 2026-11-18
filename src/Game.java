@@ -36,29 +36,12 @@ public class Game implements ApplicationListener {
  
     public static Stage uiStage;
     private Texture node;
-    private TextButton exit;
-    private GameWorld world;                    // background, nodes, links (see GameWorld.java)
+    private TextButton exit;                 // background, nodes, links (see GameWorld.java)
  
     static public int[] gameResolution = {1920,1080};
     static public float baseGameZoom = 3;
     static final int WORLD_WIDTH = gameResolution[0] * 10;
     static final int WORLD_HEIGHT = gameResolution[1] * 10;
- 
-    private void createWorld() {
-        world = new GameWorld(WORLD_WIDTH, WORLD_HEIGHT, playerUser);
-    }
- 
-    private void updateWorld(float delta) {
-        world.update(delta, !menu.isLoaded()); 
-    }
- 
-    private void drawWorld() {
-        world.draw(batch);                    
-    }
- 
-    private void disposeWorld() {
-        if (world != null) world.dispose();
-    }
  
     @Override
     public void create() {
@@ -85,7 +68,6 @@ public class Game implements ApplicationListener {
         Gdx.input.setInputProcessor(multiplexer);;
  
         playerUser = new User("Player", 100f, 1f, 0.1f, 5f);
-        createWorld();
  
         node = new Texture("src/assets/placeholderNode.png");
  
@@ -102,7 +84,6 @@ public class Game implements ApplicationListener {
  
     @Override
     public void render() {
-        updateWorld(Gdx.graphics.getDeltaTime());
  
         Gdx.gl.glClearColor(0, 0, 0.05f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -113,7 +94,6 @@ public class Game implements ApplicationListener {
         batch.setProjectionMatrix(playCamera.combined);
  
         batch.begin();
-        drawWorld();
         font.draw(batch, "abcdefghijlmnopqlstuvwxyz 0123456789", WORLD_WIDTH/2 - 450, WORLD_HEIGHT/2 + 200);
         batch.draw(node, WORLD_WIDTH/2 - node.getWidth() / 2f, WORLD_HEIGHT/2 - node.getHeight() / 2f);
         batch.end();
@@ -141,7 +121,6 @@ public class Game implements ApplicationListener {
         if (batch != null) batch.dispose();
         if (font != null) font.dispose();
         if (node != null) node.dispose(); 
-        disposeWorld();
         if (playerUser != null) playerUser.dispose();
         if (uiStage != null) uiStage.dispose();
         PlaceholderNode.disposeTexture(); // ADDED to dispose texture after the game is closed, kek

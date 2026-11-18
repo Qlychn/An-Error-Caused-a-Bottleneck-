@@ -38,7 +38,7 @@ public class User {
         }
     }
 
-    // Method to move a node towards a target position
+    // Method to move a node towards a target position (KEEP - ADD EXPONENTIAL EQUATION LERPING)
     public void moveNode(Vector2 currentNode, Vector2 targetNode, float speed) {
         Vector2 direction = targetNode.cpy().sub(currentNode);
         float distance = direction.len();
