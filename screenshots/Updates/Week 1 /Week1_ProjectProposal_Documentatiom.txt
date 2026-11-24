@@ -1,0 +1,121 @@
+================================================================================
+AN ERROR CAUSED A BOTTLENECK °^°
+OOP 101 - Object-Oriented Programming | Team 5 "Loafcode" | CS-2102
+WEEKLY UPDATE - WEEK 1 (October 9)
+Topic: Project Proposal Composition
+================================================================================
+
+On Week 1,
+	We started on the Composition on our project proposal,
+	where our team settled on a game idea and wrote down the plan for it.
+
+SUMMARY
+-------
+This week the team settled on a game idea and wrote the project proposal that
+the rest of the semester is built on. The finished write-up is saved in the
+repository as:  docs/PROJECT PROPOSAL.pdf
+
+TEAM
+----
+  No.  SR-Code    Name                              GitHub
+  1    25-01345   Entienza, Ashenden Jairus V.      Harukii (@Haru-Mb)
+  2    25-03908   Hernandez, Diandre Daivik I.      Qlychn (@Qlychn)
+  3    25-09477   Juanillo, Mc Andrew A.            Alcor (@Planetary-hub)
+
+  Roles (from the proposal):
+    - Entienza  : Programmer, External Researcher
+    - Hernandez : Programmer, Designer, Team Lead
+    - Juanillo  : Programmer, Designer
+
+THE IDEA
+--------
+Title: "An Error caused a bottleneck °^°"
+
+A Java-based computer system and network simulation game. Textbook
+assignments rarely show students how one small coding error can bring down a
+whole system. The game lets players watch simulated users travel through a
+pipeline of nodes, and then find and fix the errors that cause bottlenecks, in
+a low-stakes environment.
+
+General objective:
+  Build a Java application that simulates a simplified real-world systems
+  pipeline and presents it as a game, so learning is easier and more fun.
+
+Specific objectives:
+  1  Teach students to handle complex pipeline problems and build practical
+     logic and debugging skills through a game.
+  2  Give educators an interactive tool to demonstrate real-world programming
+     and system architecture concepts.
+  3  Give gamers and beginners an accessible, no-prior-knowledge entry point
+     into software development.
+
+TARGET USERS
+------------
+  - Students  : practice coding skills by handling complex problems as a game.
+  - Educators : an alternate learning environment for teaching.
+  - Gamers    : entertainment, and an entry point for people with zero
+                coding experience who are up for a challenge.
+
+PROPOSED FEATURES
+-----------------
+  1. Simulated Node and Pipeline Management
+     Place, configure and upgrade network nodes on a grid to route simulated
+     user traffic efficiently.
+  2. User Traffic and Load Simulation
+     Different user types with their own request rates and patience levels,
+     testing throughput and buffer limits under load spikes.
+  3. Artificial Bug Injection and Bottleneck Events
+     Periodic errors, latency spikes and node failures the player must
+     diagnose and fix using UI controls to stop a total system crash.
+  4. Stage Select and Level Progression
+     Multiple stages with growing pipeline complexity, node constraints, and
+     adjustable simulation speed.
+
+JAVA AND OOP CONCEPTS PLANNED
+-----------------------------
+  Classes and Objects : Node and User templates, instantiated across the game.
+  Methods             : Reusable setup/instantiation of nodes and user types.
+  Encapsulation       : Each node/user keeps its own logic in its own class.
+  Inheritance         : Many node and user types extend shared parent classes.
+  Polymorphism        : Child classes override parent methods with own logic.
+  Abstraction         : Parent classes hold empty/abstract methods for children.
+  Exception Handling  : Catch unexpected errors, revert to a stable snapshot.
+  Arrays / Data       : 1D and 2D arrays hold the play field, nodes and users.
+
+PROPOSED CLASSES (first draft - the proposal says these may change)
+--------------------------------------------------------------------
+  PlayField   - holds the grid, manages active objects, updates every tick.
+  Node        - abstract base class for nodes that receive and process users.
+  User        - in-game objects moving through the system, making requests.
+  Onboarding  - manager node that spawns new Users into the pipeline.
+  OffBoarding - manager node that catches Users, clears data, removes them.
+
+PROGRAM FLOW
+------------
+  Start -> Main Menu -> Stage Select -> Game Screen
+        -> Simulate User Activity -> Accept User Input
+        -> Display Game Result -> Return to Main Menu -> Exit
+
+VISUAL MOCKUPS
+--------------
+Three mockups were drawn to show the intended output (located in the repository
+under screenshots/):
+  - Project Mockup 1.png : Main menu (Stage Select, Settings, Error Codex,
+                           Quit) over a node network. Square, hexagon and
+                           circle nodes are linked by lines with users moving
+                           along them. A warning node shows the error
+                           "Can't accept new users - Array Index out of bounds".
+  - Project Mockup 2.png : In-game view, errors shown as
+                           speech bubbles on nodes (e.g. "User accept rate
+                           -30%"), and a bottom-right HUD with a star rating,
+                           an error counter and node-type inventory counts.
+  - Project Mockup 3.png : The debugging pop-up. It lists the error, a code
+                           snippet, and a result banner ("1/2 Answers correct 
+                           - Reward: +15% useraccept rate").
+
+OUTPUT OF THE WEEK
+------------------
+  - Completed project proposal (docs/PROJECT PROPOSAL.pdf)
+  - Three UI mockups (screenshots/Project Mockup 1-3.png)
+
+================================================================================

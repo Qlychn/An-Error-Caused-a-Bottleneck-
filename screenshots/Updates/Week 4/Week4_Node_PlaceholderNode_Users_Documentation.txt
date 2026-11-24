@@ -1,0 +1,139 @@
+================================================================================
+AN ERROR CAUSED A BOTTLENECK °^°
+OOP 101 - Object-Oriented Programming | Team 5 "Loafcode" | CS-2102
+WEEKLY UPDATE - WEEK 4 (October 30)
+Topic: Node, PlaceholderNode and User classes
+================================================================================
+
+On Week 4,
+	We created Node, PlaceholderNode, and Users.
+
+SUMMARY
+-------
+These are the game's core "things": the nodes that make up the network, and
+the users that travel through it. They follow the class plan from the proposal
+(abstract Node, a User class).
+
+Files involved:
+  src/scripts/game/gameObjects/Node.java
+  src/scripts/game/gameObjects/PlaceholderNode.java
+  src/scripts/game/gameObjects/User.java
+  src/assets/placeholderNode.png, src/assets/placeholderUser.png
+
+1. NODE (abstract class)
+------------------------
+A node is a point in the network that receives and processes users. Node is
+abstract, so it is never created directly. Specific node types extend it.
+
+Attributes (all private - encapsulated)
+  x, y                 position in the world
+  nodeType             name of the node type, e.g. "PLACEHOLDER"
+  userAcceptRate       how readily it takes in new users
+  processRate          how fast it works through users
+  stability            how reliable it is
+  simulateErrorRate    how likely it is to produce a simulated error
+  size                 drawn size in world units
+  connections          array of linked nodes (Node[])
+  userCapacity         how many users it can handle
+  texture              the picture used to draw it
+  broken               true if the node is currently in an error state
+  blockedNodes         a HashSet of neighbours it must stop sending users to
+
+Constructor
+  - Takes all the values above plus connectionSlots.
+  - connectionSlots must be 4 or 6. Any other value throws an
+    IllegalArgumentException with a clear message. (Exception handling.)
+  - The connections array is created with that many slots.
+
+Main methods
+  draw(batch)         Draws the node centred on its x/y position. A broken
+                      node is tinted red. It does not dispose the texture,
+                      because child classes share it.
+  processUser(...)    Handled users = round(processRate x userAcceptRate),
+                      kept between 0 and userCapacity.
+  simulateError(...)  Empty on purpose - a hook for child classes to override
+                      (polymorphism / abstraction).
+  broadcastBreak(...) When a node breaks, it tells each neighbour.
+  recieveBreak(...)   A neighbour reacts by calling stopSending(brokenNode).
+  stopSending(node)   Adds the node to blockedNodes.
+  canSendTo(node)     True only if the node exists and is not blocked.
+  setConnection(slot, node)  Links this node to another in a given slot.
+  soundBreak / soundFixed / soundPlaced
+                      Play the matching sound, if one was loaded
+                      (sounds are stored as static fields, set with
+                      setSounds(placed, broken, fixed)).
+  Getters and setters for every attribute.
+
+  Note: "recieveBreak" is spelled this way in the code.
+
+How a break spreads (the "bottleneck" idea)
+  A node breaks -> broadcastBreak() -> neighbours add it to blockedNodes ->
+  canSendTo() now returns false for that node -> users stop being sent to it,
+  so traffic can pile up behind it. This is the groundwork for the game's
+  "bottleneck" idea; the traffic itself is not simulated yet.
+
+2. PLACEHOLDERNODE (extends Node)
+---------------------------------
+A simple, usable node used while the real node types are still being designed.
+  - Calls super(x, y, "PLACEHOLDER", 1, 1, 1, 0, 300, 4, 1):
+      accept rate 1, process rate 1, stability 1, error rate 0,
+      size 300, 4 connection slots, capacity 1.
+  - Uses ONE shared Texture for every PlaceholderNode (static sharedTexture,
+    loaded the first time it is needed from src/assets/placeholderNode.png).
+    This avoids loading the same picture again for every node.
+  - disposeTexture() frees that shared texture. Game.dispose() calls it once
+    when the game closes.
+
+3. USER (class)
+---------------
+A user is a visitor moving through the network. Its mood and patience
+determine the game's rating.
+
+Attributes
+  userType, rating, patience, errorCauseRate, speed, soundState,
+  userPlaceholderTexture, spawnCords (a libGDX Vector2)
+
+Two constructors (constructor overloading)
+  1. Full : User(type, rating, patience, errorCauseRate, speed, spawnCords)
+  2. Short: User(type, spawnCords) - uses defaults:
+            rating 5, patience 1, errorCauseRate 0.1, speed 5,
+            soundState "moderate"
+
+Methods
+  moveNode(current, target, speed)
+      Moves a position toward a target by one step of "speed". If the target
+      is within one step it jumps to it. (A comment notes that exponential
+      easing could be added later.)
+  update(deltaTime)
+      Calls updateRating and updatePatience once per frame.
+  updateRating(dt)
+      Rating drops by dt x errorCauseRate and never goes below 0.
+  updatePatience(dt)
+      Patience drops by dt x 0.1 and never goes below 0.
+  loseRating(rating, patience)
+      Loses rating based on how little patience is left.
+  soundDissatisfied / soundModerate / soundContent
+      Set the user's mood state to "dissatisfied", "moderate" or "content".
+  broadcastLoss(user, rating)
+      Makes another user lose rating and become dissatisfied.
+  broadcastContent(user, rating) / broadcastContentToAll(users[], rating)
+  / broadcastContent(rating)
+      Set a user (or every user in an array, or itself) to a rating and mark
+      it "content". (Method overloading.)
+  dispose()
+      Frees the user's texture.
+  Getters and setters for every attribute.
+
+  Spread of mood: one unhappy (or happy) user can influence others, which fits
+  the proposal's idea of users with different patience levels.
+
+CREDITS 
+-------------------------------------
+  - Most of User.java was first generated with Gemini AI, then edited by hand
+    to make it work and to add features.
+
+OUTPUT OF THE WEEK
+------------------
+  - Abstract Node class, PlaceholderNode, and User class
+
+================================================================================

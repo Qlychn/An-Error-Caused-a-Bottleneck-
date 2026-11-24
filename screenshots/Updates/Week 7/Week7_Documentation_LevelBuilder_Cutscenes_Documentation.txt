@@ -1,0 +1,47 @@
+================================================================================
+AN ERROR CAUSED A BOTTLENECK °^°
+OOP 101 - Object-Oriented Programming | Team 5 "Loafcode" | CS-2102
+WEEKLY UPDATE - WEEK 7 (November 20)
+Topic: Started Documentation, Level Builder and Cutscenes
+================================================================================
+
+On Week 7,
+	We started the Level Builder.
+	We started the Cutscenes.
+
+SUMMARY
+-------
+Two things were started this week. Thelevel builder and the cutscene system each 
+have their first files in place, so the work has a home in the project structure. 
+The builder and cutscene classesare still empty shells; no level or cutscene logic 
+is written yet.
+
+1  LEVEL BUILDER
+----------------
+New files (package folders created for them):
+  src/scripts/builders/stageBuilder.java   class stageBuilder
+  src/scripts/stages/testStage1.java       class testStage1
+
+Purpose (from the proposal's "Stage Select and Level Progression" feature):
+  - stageBuilder : the tool/class that will assemble a stage. Like placing nodes,
+                   linking them and setting up users for that level.
+  - testStage1   : <not sure pa will continue later>
+
+2. CUTSCENES
+------------
+New file:
+  src/scripts/builders/cutsceneBuilder.java   class cutsceneBuilder
+
+Purpose: the class that will put together short story or tutorial scenes
+between stages (example type of thing).
+
+Locations:
+------------
+      scripts/builders/  cutsceneBuilder, stageBuilder
+      scripts/stages/    testStage1
+
+OUTPUT OF THE WEEK
+------------------
+  - Project structure for the level builder and cutscenes 
+
+================================================================================

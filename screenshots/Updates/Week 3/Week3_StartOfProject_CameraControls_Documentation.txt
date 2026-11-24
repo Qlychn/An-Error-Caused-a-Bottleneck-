@@ -1,0 +1,127 @@
+================================================================================
+AN ERROR CAUSED A BOTTLENECK °^°
+OOP 101 - Object-Oriented Programming | Team 5 "Loafcode" | CS-2102
+WEEKLY UPDATE - WEEK 3 (October 23)
+Topic: Start of Project, Camera Controls
+================================================================================
+
+On Week 3,
+	We started the project itself, and we made the camera controls.
+
+SUMMARY
+-------
+The game now opens as a real program. A fullscreen window starts, and the
+player can drag the view around a large game world and zoom in and out with
+the mouse wheel.
+
+Files involved:
+  src/Main.java                        program entry point / window settings
+  src/scripts/game/Game.java           main game loop (libGDX ApplicationListener)
+  src/scripts/control/CamControls.java camera zoom and pan logic
+  src/scripts/control/InputHandler.java mouse and keyboard input
+
+1. PROJECT START: WINDOW AND GAME LOOP
+--------------------------------------
+Main.java (entry point)
+  - Creates an Lwjgl3Application (libGDX desktop window) running Game.
+  - Window title : "An Error caused a bottleneck °^°"
+  - VSync on, foreground frame rate capped at 120 FPS
+  - Window icon  : src/assets/appIcon.png
+  - Starts in fullscreen using the monitor's current display mode
+    (a windowed 1280x720 line is kept in a comment for testing)
+
+Game.java (implements libGDX ApplicationListener)
+  - create()  : builds the cameras, viewports, and font.
+  - resize()  : updates both viewports when the window size changes.
+  - render()  : runs every frame - clears the screen to a dark blue
+                (0, 0, 0.05), updates the camera, then draws.
+  - dispose() : frees batch, font, textures and the UI stage so the game does
+                not leak memory.
+  - pause() / resume() are empty, as the interface requires them.
+
+Two-camera setup
+  - playCamera : looks at the game world (this is when the player moves).
+  - uiCamera   : stays fixed, used for menus so the UI does not move when the
+                 world camera moves.
+  - Both use an ExtendViewport with a 1920 x 1080 base resolution, so the
+    picture keeps its proportions on different screen sizes.
+
+Game world size
+  - WORLD_WIDTH  = 1920 x 10 = 19,200 units
+  - WORLD_HEIGHT = 1080 x 10 = 10,800 units
+  - The camera starts in the middle of the world with a base zoom of 3.
+  - For testing, the world shows a line of sample text and the 300x300
+    placeholder node picture in the middle.
+
+2. CAMERA CONTROLS (CamControls.java)
+-------------------------------------
+ZOOM (mouse wheel)
+  - Each scroll tick adds one-fifth of the scroll amount to a target zoom.
+  - Zoom is limited between 1 (closest) and 10 (farthest).
+  - The camera eases toward the target by 10% of the gap each frame, which
+    gives a smooth zoom instead of a sudden jump.
+
+PAN (click and drag)
+  - On mouse-down, the screen point is converted to a world point once
+    (viewport.unproject) and remembered.
+  - While dragging, the camera velocity = (start point - current point) x 0.25
+    (camPanLerp), so the world follows the mouse.
+  - On release, the camera keeps gliding and slows down by multiplying the
+    speed by 0.93 each frame (camFriction). Movement below 0.01 is snapped
+    to 0.
+  - If the camera hits the edge of the world, its speed in that direction is
+    set to 0 so it does not bounce or jitter.
+
+CLAMPING (camClamp)
+  - Works out how much of the world is visible (viewport size x zoom).
+  - Keeps the camera inside the world so the player cannot scroll into empty
+    space.
+  - If the view is bigger than the whole world, the camera is simply centred.
+
+3. INPUT HANDLING (InputHandler.java)
+-------------------------------------
+  - Extends libGDX InputAdapter (pattern from the libGDX wiki, "event
+    handling").
+  - touchDown   -> start a camera pan
+  - touchDragged-> update the mouse position used by the pan
+  - touchUp     -> stop the pan (the glide takes over)
+  - scrolled    -> change the zoom target
+  - The Esc key (added later with the menu) opens/closes the main menu.
+
+OOP AND COURSE CONCEPTS USED THIS WEEK
+--------------------------------------
+  - Interface implementation : Game implements ApplicationListener.
+  - Inheritance              : InputHandler extends InputAdapter.
+  - Encapsulation / methods  : camera maths is separated into CamControls so
+                               Game.java only calls it.
+  - Static members           : CamControls and shared viewports are static so
+                               other classes can reach them.
+
+CREDITS
+------------------------------------------------
+  - The empty ApplicationListener template was generated with Gemini AI.
+  - The pan handler, pan start and clamp functions in CamControls were made
+    with assistance from Claude Sonnet 5.5.
+  - Imports were learned from the official libGDX wiki and GitHub.
+
+OUTPUT OF THE WEEK
+------------------
+  - A runnable window with a world the player can pan and zoom around.
+
+================================================================================
+
+⢀⠴⠑⡄⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠸⡇⠀⠿⡀⠀⠀⠀⣀⡴⢿⣿⣿⣿⣿⣿⣵⣿⣧⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠑⢄⣠⠾⠁⣀⣄⡈⠙⣿⣿⣿⣿⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢀⡀⠁⠀⠀⠈⠙⠛⠂⠈⣿⣿⣿⣿⣿⠿⡿⢿⣆⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢀⡾⣁⣀⠀⠴⠂⠙⣗⡀⠀⢻⣿⣿⠭⢤⣴⣦⣤⣹⠀⠀⠀⣀⢴⣶⣆
+⠀⠀⢀⣾⣿⣿⣿⣷⣮⣽⣾⣿⣥⣴⣿⣿⡿⢂⠔⢚⡿⢿⣿⣦⣴⣾⠅⠸⣼⡿
+⠀⢀⡞⠁⠙⠻⠿⠟⠉⠀⠛⢹⣿⣿⣿⣿⣿⣌⢤⣼⣿⣾⣿⡟⠉⠈⠀⠀⠀⠀
+⠀⣾⣷⣶⠇⠀⠀⣤⣄⣀⡀⠈⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀
+⠀⠉⠈⠉⠀⠀⢦⡈⢻⣿⣿⣿⣶⣶⣶⣶⣤⣽⡱⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠉⠲⣽⡻⢿⣿⣿⣿⣿⣿⣿⣷⣜⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣷⣶⣮⣭⣽⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⣀⣀⣈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠻⠿⠿⠿⠿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
