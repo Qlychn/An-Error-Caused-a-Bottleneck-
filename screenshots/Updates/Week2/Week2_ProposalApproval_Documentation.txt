@@ -1,0 +1,80 @@
+================================================================================
+AN ERROR CAUSED A BOTTLENECK °^°
+OOP 101 - Object-Oriented Programming | Team 5 "Loafcode" | CS-2102
+WEEKLY UPDATE - WEEK 2 (October 16)
+Topic: Project Proposal Approval, GitHub / External Requirement
+================================================================================
+
+On Week 2,
+	The project proposal was submitted for approval, and we prepared the
+	GitHub repository and the external requirements for the project.
+
+SUMMARY
+-------
+With the proposal from Week 1 finished, this week our proposal got approved.
+Now we mapped out what to do and start the development phase. Then Our Lead 
+developer shared the repository and the chosen tech-stack.
+
+1. PROJECT PROPOSAL APPROVAL
+----------------------------
+  - Final proposal: docs/PROJECT PROPOSAL.pdf (saved Oct 16).
+  - The three mockups were saved alongside it in screenshots/ (Oct 16).
+
+2. GITHUB
+---------
+  - The project lives in a shared Git repository, 
+    "https://github.com/Qlychn/An-Error-Caused-a-Bottleneck-.git".
+  - Repository files set up: .gitignore, .gitattributes, README.md
+    (README is still a placeholder: "Placeholder / Placeholder description").
+  - Contributors (GitHub usernames from the proposal):
+      Harukii (@Haru-Mb), Qlychn (@Qlychn), Alcor (@Planetary-hub)
+  - Folder layout used from here on:
+      src/            source code and game assets
+      docs/           written documents (mainly the project proposal)
+      screenshots/    mockups, plus Updates/ for weekly write-ups
+      .vscode/        launch.json so VS Code can run the game
+      pom.xml         Maven build file
+
+3. EXTERNAL REQUIREMENT (libraries and tools)
+---------------------------------------------
+  The pom.xml which records what the project depends on:
+
+  Build
+    - Maven, group "dev.loafcode", artifact "an-error-caused-a-bottleneck",
+      version 1.0-SNAPSHOT
+    - Java 17 (compiler source and target)
+    - UTF-8 source encoding
+    - Source folder is "src" instead of Maven's default src/main/java
+    - exec-maven-plugin 3.4.0 with main class "Main", so the game can be run
+      from Maven
+
+  Sources credited inside pom.xml:
+    - pom.xml template: Pravin's "A beginner's guide to pom.xml and Maven"
+    - libGDX dependency entries: libGDX wiki (Maven integration)
+    - org.json: mvnrepository.com
+
+  VS Code launch settings (.vscode/launch.json):
+    - Launch config "Launch Game" runs main class "Main"
+    - JVM arg --enable-native-access=ALL-UNNAMED
+    - On macOS it also adds -XstartOnFirstThread (required by the windowing
+      library on Mac)
+
+  First assets added (Oct 17):
+    - src/assets/appIcon.png        (64x64 window icon)
+    - src/assets/placeholderNode.png (300x300 stand-in node picture)
+
+WHY libGDX
+----------
+  The game needs a window, a camera, input handling and UI widgets.
+  libGDX provides all of these in Java, runs on all three major desktop
+  systems, and has a ready-made UI toolkit (Scene2D), which suits a
+  node-and-pipeline game.
+
+OUTPUT OF THE WEEK
+------------------
+  - Approved project proposal
+  - GitHub repository with shared folder structure
+  - Maven project (pom.xml) with libGDX and org.json set up
+  - Placeholder assets for testing
+
+================================================================================

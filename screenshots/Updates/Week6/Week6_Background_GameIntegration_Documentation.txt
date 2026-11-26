@@ -1,0 +1,72 @@
+================================================================================
+AN ERROR CAUSED A BOTTLENECK °^°
+OOP 101 - Object-Oriented Programming | Team 5 "Loafcode" | CS-2102
+WEEKLY UPDATE - WEEK 6 (November 13)
+Topic: Background Attempt, Connecting User / PlaceholderNode / Node into Game.java
+================================================================================
+
+On Week 6,
+	We tried to apply a background.
+	We made the User, PlaceholderNode and Node work inside Game.java.
+
+SUMMARY
+-------
+Two goals this week: give the game world a background, and start bringing the
+Week 4 classes into the main game loop (Game.java). The background was an
+attempt and is not switched on yet; the classes are connected to Game.java but
+it is not yet creating objects on screen.
+
+Files involved:
+  src/scripts/game/gameObjects/Background.java
+  src/scripts/game/Game.java
+  src/scripts/game/gameObjects/Node.java, PlaceholderNode.java, User.java
+
+1. BACKGROUND (Background.java)  - attempt
+------------------------------------------
+Background is a small class meant to paint the world behind everything.
+  - Constructor takes four numbers (red, green, blue, alpha) for a solid colour.
+  - It also builds a 1x1 white texture from a Pixmap (stretched later to cover
+    an area). The Pixmap is freed straight away after the texture is made.
+  - render()      : clears the screen with the chosen colour
+                    (glClearColor + glClear).
+  - drawOverlay() : draws the white texture across a given width and height at
+                    30% opacity, then resets the batch colour to normal. This
+                    gives a light "wash" over the background.
+  - dispose()     : frees the overlay texture.
+
+Status: the class is written, but Game.render() does not call it yet. Game.java
+still clears the screen itself with a fixed dark blue (0, 0, 0.05), so the
+background effect is not visible in the game. Making the background show is
+unfinished work.
+
+2. CONNECTING USER, PLACEHOLDERNODE AND NODE TO Game.java
+--------------------------------------------------------
+What Game.java does with them now:
+  - It imports PlaceholderNode and User.
+  - A User field (playerUser) is declared. The line that creates it,
+    new User("Player", 100f, 1f, 0.1f, 5f), is commented out for now. It
+    uses an older argument list (no spawn-point Vector2), so it would need
+    updating to match the current User constructors before it is switched on.
+  - dispose() cleans up the User (playerUser.dispose()) and calls
+    PlaceholderNode.disposeTexture() to free the shared node picture.
+    A comment in the code explains why this matters: a memory leak made a
+    team member's laptop crash while playing.
+  - render() draws the node picture (placeholderNode.png) at the exact centre
+    of the world next to test text, using the world camera.
+
+How the pieces work together in the game loop
+  create()  -> make cameras, viewports, batch, font, UI stage, input
+               -> load the test node picture -> create and show the menu
+  render()  -> clear screen
+               -> update camera zoom and pan (CamControls)
+               -> draw the world (test text, node picture)
+               -> draw the UI stage on top (menu)
+  dispose() -> free batch, font, textures, UI stage, User, shared node texture
+
+OUTPUT OF THE WEEK
+------------------
+  - Background class (written, not yet shown in the game)
+  - Game.java ready to hold User and Node objects, with a clean shutdown
+    for their textures
+
+================================================================================

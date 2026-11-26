@@ -1,0 +1,99 @@
+================================================================================
+AN ERROR CAUSED A BOTTLENECK °^°
+OOP 101 - Object-Oriented Programming | Team 5 "Loafcode" | CS-2102
+WEEKLY UPDATE - WEEK 5 (November 6)
+Topic: Menu UI
+================================================================================
+
+On Week 5,
+	We created the Menu UI.
+
+SUMMARY
+-------
+The game now has a working main menu with four buttons, an Options screen
+(monitor choice, volume sliders, windowed / fullscreen) and a Library screen.
+The menu was built with libGDX Scene2D, the library's built-in UI toolkit.
+
+Files involved:
+  src/scripts/control/MainMenuUI.java   all the menu screens and buttons
+  src/scripts/control/InputHandler.java Esc key to open/close the menu
+  src/scripts/game/GameSettings.java    shared volume and display settings
+  src/assets/skin/skin.atlas, skin.json, skin.png   the UI skin (look)
+  src/assets/CatThumb.png               extra test picture (not used in code)
+
+1. THE UI SKIN
+--------------
+A libGDX Skin was created (skin.atlas + skin.json + skin.png, Nov 6) and is
+loaded when the menu starts. It holds:
+  - a 9-patch picture (a stretchable box) and a 227x222 test picture
+  - colours (white and red)
+  - styles for List, ScrollPane, SelectBox and Slider
+  - the game's font, registered under the name "Placeholder"
+The look is still placeholder art, to be replaced with the real design later.
+
+2. MAIN MENU (left side of the screen)
+--------------------------------------
+Four large buttons (500 x 140), stacked and aligned to the left:
+  Start    -> hides the main menu and options, and gives mouse/keyboard control
+              back to the game world (so the player can pan and zoom)
+  Library  -> opens the Library screen
+  Options  -> opens the Options screen
+  Exit     -> closes the game (Gdx.app.exit())
+
+How it compares with the Week 1 mockup:
+  Mockup: Stage Select / Settings / Error Codex / Quit
+  Built : Start / Options / Library / Exit
+  (Library, with its Errors / Users / Nodes buttons, is the new version of
+  the planned "Error Codex".)
+
+3. OPTIONS SCREEN (right side)
+------------------------------
+  - Monitor dropdown (SelectBox): lists every connected monitor as "1: name",
+    "2: name", ... and starts on the monitor the game is currently on.
+    Choosing another monitor moves the game there - in fullscreen it switches
+    that monitor's display mode; in a window it re-centres the window on it.
+  - Three volume rows: Master, SFX and Music. Each has a label button that
+    shows the current percentage and a Slider from 0 to 100. Moving the slider
+    updates the label text live, e.g. "Master (75%)".
+  - Windowed button : switches to a 1280 x 720 window.
+  - Fullscreen button: switches to full screen on the current monitor.
+    (Both only appear active if the system supports display-mode changes.)
+  - Back button     : closes the Options screen.
+
+4. LIBRARY SCREEN (centre)
+--------------------------
+  - Three buttons: Errors, Users, Nodes (200 x 100) and a Back button.
+  - Back returns to the main menu.
+  - At this stage the three category buttons are placeholders; they do not
+    open anything yet.
+
+5. HOW THE MENU AND THE GAME SHARE INPUT
+----------------------------------------
+Game.java owns an InputMultiplexer that decides who receives input:
+  - Menu open  : the UI Stage receives the mouse (buttons work, the world
+                 camera does not move).
+  - Menu closed: the InputHandler receives the mouse (drag to pan, wheel to
+                 zoom).
+  - Esc key    : InputHandler checks Game.menu.isLoaded(). If the menu is
+                 showing, it is hidden; if hidden, it is shown.
+  MainMenuUI.loadMainMenu() / unloadMainMenu() swap the two processors and set
+  a "showing" flag. The menu is drawn by a separate UI viewport and camera, so
+  it stays put while the world camera moves.
+
+6. GAMESETTINGS (supporting class)
+----------------------------------
+A final class with static values that any screen can read:
+  - displayMode : fullscreen (0) or borderless (1); monitorIndex
+  - masterVolume 100, musicVolume 80, sfxVolume 80 (0-100)
+  - effectiveMusicVolume() = master/100 x music/100   (0.0 to 1.0)
+  - effectiveSfxVolume()   = master/100 x sfx/100     (0.0 to 1.0)
+  The private constructor stops anyone from creating an object of it.
+  Not connected yet: the Options sliders currently keep their own values inside
+  MainMenuUI, and no music or sound effects are played yet, so GameSettings is
+  prepared for when audio is added.
+
+OUTPUT OF THE WEEK
+------------------
+  - Working main menu, Options screen and Library screen, plus the UI skin
+
+================================================================================
