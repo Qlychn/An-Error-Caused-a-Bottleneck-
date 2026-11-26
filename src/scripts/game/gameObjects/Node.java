@@ -38,9 +38,7 @@ public abstract class Node {
     protected Node(float x, float y, String nodeType, float userAcceptRate, float processRate,
                    float stability, float simulateErrorRate, float size,
                    int connectionSlots, int userCapacity) {
-        if (connectionSlots != 4 && connectionSlots != 6) {
-            throw new IllegalArgumentException("connectionSlots must be 4 or 6, got " + connectionSlots);
-        }
+
         this.x = x;
         this.y = y;
         this.nodeType = nodeType;

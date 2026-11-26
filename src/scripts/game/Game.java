@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import scripts.control.CamControls;
 import scripts.control.InputHandler;
 import scripts.control.MainMenuUI;
+import scripts.control.InGameUI;
 import scripts.game.gameObjects.PlaceholderNode;
 import scripts.game.gameObjects.User;
 
@@ -26,15 +27,19 @@ public class Game implements ApplicationListener {
     private OrthographicCamera uiCamera;
     
     private User playerUser;
-    public static MainMenuUI menu;
+    public static MainMenuUI mainMenu;
+    public static InGameUI inGameUI;
     public static InputHandler inputHandler;
     public static InputMultiplexer multiplexer;
  
  
     public static ExtendViewport gameViewport;
     public static ExtendViewport mainMenuViewport;
+    public static ExtendViewport inGameUIViewport;
  
-    public static Stage uiStage;
+    public static Stage mainMenuUIStage;
+    public static Stage inGameUIStage;
+
     private Texture node;
     private TextButton exit;                 // background, nodes, links (see GameWorld.java)
  
@@ -51,6 +56,7 @@ public class Game implements ApplicationListener {
  
         gameViewport = new ExtendViewport(gameResolution[0], gameResolution[1], playCamera);
         mainMenuViewport = new ExtendViewport(gameResolution[0], gameResolution[1], uiCamera);
+        inGameUIViewport = new ExtendViewport(gameResolution[0], gameResolution[1], uiCamera);
  
         playCamera.position.set(WORLD_WIDTH / 2f, WORLD_HEIGHT / 2f, 0);
         playCamera.zoom = baseGameZoom;
@@ -61,23 +67,25 @@ public class Game implements ApplicationListener {
         font = new BitmapFont();
         font.getData().setScale(3f);
  
-        uiStage = new Stage(mainMenuViewport, batch);
+        mainMenuUIStage = new Stage(mainMenuViewport, batch);
+        inGameUIStage = new Stage(inGameUIViewport, batch);
         
         inputHandler = new InputHandler();
         multiplexer = new InputMultiplexer();
         Gdx.input.setInputProcessor(multiplexer);;
  
-        //playerUser = new User("Player", 100f, 1f, 0.1f, 5f);
         node = new Texture("src/assets/placeholderNode.png");
  
-        menu = new MainMenuUI(uiStage, font);
-        menu.loadMainMenu();
+        mainMenu = new MainMenuUI(mainMenuUIStage, font);
+        inGameUI = new InGameUI(inGameUIStage, font);
+        mainMenu.loadMainMenu();
     }
  
     @Override
     public void resize(int width, int height) {
         gameViewport.update(width, height, false);
         mainMenuViewport.update(width, height, true);
+        inGameUIViewport.update(width, height, true);
         //if (menu != null) menu.resize(width, height);
     }
  
@@ -98,8 +106,11 @@ public class Game implements ApplicationListener {
         batch.end();
  
         mainMenuViewport.apply();
-        uiStage.act(Gdx.graphics.getDeltaTime());
-        uiStage.draw();
+        inGameUIViewport.apply();
+        mainMenuUIStage.act(Gdx.graphics.getDeltaTime());
+        mainMenuUIStage.draw();
+        inGameUIStage.act(Gdx.graphics.getDeltaTime());
+        inGameUIStage.draw();
  
     }
  
@@ -121,7 +132,8 @@ public class Game implements ApplicationListener {
         if (font != null) font.dispose();
         if (node != null) node.dispose(); 
         if (playerUser != null) playerUser.dispose();
-        if (uiStage != null) uiStage.dispose();
+        if (mainMenuUIStage != null) mainMenuUIStage.dispose();
+        if (inGameUIStage != null) inGameUIStage.dispose();
         PlaceholderNode.disposeTexture(); // ADDED to dispose texture after the game is closed, kek
     }
 }

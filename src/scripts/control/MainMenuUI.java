@@ -60,8 +60,9 @@ public class MainMenuUI {
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-               unloadMainMenu();
-               unloadOptionsMenu();
+                unloadMainMenu();
+                unloadOptionsMenu();
+                Game.inGameUI.loadInGameUI();
             }
         });
 
@@ -189,9 +190,7 @@ public class MainMenuUI {
             public void changed(ChangeEvent event, Actor actor) {
                 Monitor currMonitor = Gdx.graphics.getMonitor();
                 DisplayMode displayMode = Gdx.graphics.getDisplayMode(currMonitor);
-                if(!Gdx.graphics.setFullscreenMode(displayMode)) {
-                // switching to full-screen mode failed
-                }
+                if(!Gdx.graphics.setFullscreenMode(displayMode)) {}
             }
         });
         }
@@ -273,13 +272,13 @@ public class MainMenuUI {
 
     public void loadMainMenu(){
         Game.multiplexer.removeProcessor(Game.inputHandler);
-        Game.multiplexer.addProcessor(Game.uiStage);
+        Game.multiplexer.addProcessor(Game.mainMenuUIStage);
         uiStage.addActor(mainMenuTable);
         showing = true;
     }
 
     public void unloadMainMenu(){
-        Game.multiplexer.removeProcessor(Game.uiStage);
+        Game.multiplexer.removeProcessor(Game.mainMenuUIStage);
         Game.multiplexer.addProcessor(Game.inputHandler);
         mainMenuTable.remove();
         showing = false;

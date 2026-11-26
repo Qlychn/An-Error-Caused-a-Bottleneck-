@@ -1,4 +1,12 @@
 {
+com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	vcr_osd_mono: {
+		file: vcr_osd_mono.fnt
+		scaledSize: -1
+		markupEnabled: false
+		flip: false
+	}
+}
 com.badlogic.gdx.graphics.Color: {
 	RGBA_0_0_0_255: {
 		r: 1
@@ -26,9 +34,21 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 		color: RGBA_255_0_0_255
 	}
 }
+com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
+	default: {
+		imageUp: Transparent
+		imageDown: Transparent
+		down: Transparent
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
+	default: {
+		font: vcr_osd_mono
+	}
+}
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: {
-		font: Placeholder
+		font: vcr_osd_mono
 		fontColorSelected: RGBA_0_0_0_255
 		fontColorUnselected: RGBA_0_0_0_255
 		selection: Screenshot 2026-10-31 221346
@@ -43,7 +63,7 @@ com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {
-		font: Placeholder
+		font: vcr_osd_mono
 		fontColor: RGBA_0_0_0_255
 		scrollStyle: default
 		listStyle: default
@@ -53,6 +73,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 	default-horizontal: {
 		background: 9Patch
 		knob: Screenshot 2026-10-31 221346
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
+	default-horizontal: {
+		handle: 9Patch
 	}
 }
 }

@@ -4,8 +4,6 @@ import com.badlogic.gdx.InputAdapter;
 
 import scripts.game.Game;
 
-
-
 // Input processor taken form official libGDX wiki (event handling)
 // https://libgdx.com/wiki/input/event-handling
 
@@ -16,15 +14,16 @@ public class InputHandler extends InputAdapter {
 
    public boolean keyUp (int keycode) {
       if (keycode == Input.Keys.ESCAPE){ 
-         if (Game.menu.isLoaded()){
-            Game.menu.unloadMainMenu();
+         if (Game.mainMenu.isLoaded()){
+            Game.mainMenu.unloadMainMenu();
+            Game.inGameUI.loadInGameUI();
          } else{
-            Game.menu.loadMainMenu();
+            Game.inGameUI.unloadInGameUI();
+            Game.mainMenu.loadMainMenu();
          }
       }
       return true; 
    }
-
    public boolean keyTyped (char character) {
       return false;
    }
