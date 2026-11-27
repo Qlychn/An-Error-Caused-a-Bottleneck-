@@ -21,7 +21,6 @@ import com.badlogic.gdx.Graphics.Monitor;
 
 public class MainMenuUI {
     private final Stage uiStage;
-    private final TextButtonStyle style;
     private Table mainMenuTable;
     private Table optionsTable;
     private Table libraryTable;
@@ -38,31 +37,25 @@ public class MainMenuUI {
 
     Skin skin;
 
-    public MainMenuUI(Stage stage, BitmapFont font) {
+    public MainMenuUI(Stage stage) {
         this.uiStage = stage;
 
-        skin = new Skin();
-        skin.add("Placeholder", font, BitmapFont.class);
-        skin.addRegions(new TextureAtlas(Gdx.files.internal("src/assets/skin/skin.atlas")));
-        skin.load(Gdx.files.internal("src/assets/skin/skin.json"));
-
-        style = new TextButtonStyle();
-        style.font = font;
+        skin = new Skin(Gdx.files.internal("src/assets/skin/skin.json"));
 
         initOptionsMenu();
         initLibrary();
 
-        startButton = new TextButton("Start", style);
-        libraryButton = new TextButton("Library", style);
-        optionsButton = new TextButton("Options", style);
-        exitButton = new TextButton("Exit", style);
+        startButton = new TextButton("Start", skin);
+        libraryButton = new TextButton("Library", skin);
+        optionsButton = new TextButton("Options", skin);
+        exitButton = new TextButton("Exit", skin);
 
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 unloadMainMenu();
                 unloadOptionsMenu();
-                Game.inGameUI.loadInGameUI();
+                Game.inGameUI.hideInGameUI();
             }
         });
 
@@ -125,21 +118,22 @@ public class MainMenuUI {
         String sfxVolText = String.valueOf(sfxVol);
         String musicVolTest = String.valueOf(musicVol);
 
-        masterVolButton = new TextButton("Master (" + masterVolText + "%)", style);
-        sfxVolButton = new TextButton("SFX (" + sfxVolText + "%)", style);
-        musicVolButton = new TextButton("Music (" + musicVolTest + "%)", style);
+        masterVolButton = new TextButton("Master (" + masterVolText + "%)", skin);
+        sfxVolButton = new TextButton("SFX (" + sfxVolText + "%)", skin);
+        musicVolButton = new TextButton("Music (" + musicVolTest + "%)", skin);
 
         Slider masterVolSlider = new Slider(0, 100, 1, false, skin);
         Slider sfxVolSlider = new Slider(0, 100, 1, false, skin);
         Slider musicVolSlider = new Slider(0, 100, 1, false, skin);
+        
 
         masterVolSlider.setValue(masterVol);
         sfxVolSlider.setValue(sfxVol);
         musicVolSlider.setValue(musicVol);
 
-        windowedButton = new TextButton("Windowed", style);
-        fullScreenButton = new TextButton("Fullscreen", style);
-        backButton = new TextButton("Back", style);
+        windowedButton = new TextButton("Windowed", skin);
+        fullScreenButton = new TextButton("Fullscreen", skin);
+        backButton = new TextButton("Back", skin);
 
         monitorSelect.addListener(new ChangeListener() {
             @Override
@@ -234,10 +228,10 @@ public class MainMenuUI {
 
     public void initLibrary(){
 
-        errorsButton = new TextButton("Errors", style);
-        usersButton = new TextButton("Users", style);
-        nodesButton = new TextButton("Nodes", style);
-        libraryBackButton = new TextButton("Back", style);
+        errorsButton = new TextButton("Errors", skin);
+        usersButton = new TextButton("Users", skin);
+        nodesButton = new TextButton("Nodes", skin);
+        libraryBackButton = new TextButton("Back", skin);
 
         libraryBackButton.addListener(new ChangeListener() {
             @Override
@@ -289,7 +283,6 @@ public class MainMenuUI {
     }
 
     public void dispose(){
-        skin.remove("Placeholder", BitmapFont.class);
         skin.dispose();
     }
 }

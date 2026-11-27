@@ -7,6 +7,7 @@ import scripts.game.Game;
 // Input processor taken form official libGDX wiki (event handling)
 // https://libgdx.com/wiki/input/event-handling
 
+
 public class InputHandler extends InputAdapter {
    public boolean keyDown (int keycode) {
       return false;
@@ -16,10 +17,18 @@ public class InputHandler extends InputAdapter {
       if (keycode == Input.Keys.ESCAPE){ 
          if (Game.mainMenu.isLoaded()){
             Game.mainMenu.unloadMainMenu();
-            Game.inGameUI.loadInGameUI();
+            Game.inGameUI.showInGameUI();
          } else{
-            Game.inGameUI.unloadInGameUI();
+            Game.inGameUI.hideAllInGameUI();
             Game.mainMenu.loadMainMenu();
+         }
+      }
+
+      if (keycode == Input.Keys.A){ 
+         if (Game.inGameUI.isLoaded()){
+            Game.inGameUI.hideInGameUI();
+         } else{
+            Game.inGameUI.showInGameUI();
          }
       }
       return true; 

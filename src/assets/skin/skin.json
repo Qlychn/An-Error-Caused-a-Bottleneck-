@@ -8,30 +8,36 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	}
 }
 com.badlogic.gdx.graphics.Color: {
-	RGBA_0_0_0_255: {
-		r: 1
-		g: 1
-		b: 1
+	black: {
+		r: 0
+		g: 0
+		b: 0
 		a: 1
 	}
-	RGBA_255_0_0_255: {
+	red: {
 		r: 1
 		g: 0
 		b: 0
+		a: 1
+	}
+	white: {
+		r: 1
+		g: 1
+		b: 1
 		a: 1
 	}
 }
 com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable: {
 	Screenshot 2026-10-31 221346: {
 		region: Screenshot 2026-10-31 221346
-		minWidth: 20
-		minHeight: 20
+		minWidth: 35
+		minHeight: 35
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	red: {
 		name: white-pixel
-		color: RGBA_255_0_0_255
+		color: red
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
@@ -46,25 +52,33 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
 		font: vcr_osd_mono
 	}
 }
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: {
+		font: vcr_osd_mono
+	}
+}
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: {
 		font: vcr_osd_mono
-		fontColorSelected: RGBA_0_0_0_255
-		fontColorUnselected: RGBA_0_0_0_255
-		selection: Screenshot 2026-10-31 221346
+		fontColorSelected: white
+		fontColorUnselected: white
+		selection: red
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: {
 		background: 9Patch
-		hScroll: Screenshot 2026-10-31 221346
-		vScroll: Screenshot 2026-10-31 221346
+		hScroll: 9Patch
+		hScrollKnob: Screenshot 2026-10-31 221346
+		vScroll: 9Patch
+		vScrollKnob: Screenshot 2026-10-31 221346
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {
 		font: vcr_osd_mono
-		fontColor: RGBA_0_0_0_255
+		fontColor: white
+		background: 9Patch
 		scrollStyle: default
 		listStyle: default
 	}
@@ -78,6 +92,16 @@ com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
 	default-horizontal: {
 		handle: 9Patch
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: {
+		font: vcr_osd_mono
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+	default: {
+		label: default
 	}
 }
 }

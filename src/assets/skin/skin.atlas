@@ -26,17 +26,17 @@ Transparent
   orig: 2000, 220
   offset: 0, 0
   index: -1
-white-pixel
-  rotate: false
-  xy: 259, 1805
-  size: 1, 1
-  orig: 1, 1
-  offset: 0, 0
-  index: -1
 vcr_osd_mono
   rotate: false
   xy: 1, 1550
   size: 256, 256
   orig: 256, 256
+  offset: 0, 0
+  index: -1
+white-pixel
+  rotate: false
+  xy: 259, 1805
+  size: 1, 1
+  orig: 1, 1
   offset: 0, 0
   index: -1

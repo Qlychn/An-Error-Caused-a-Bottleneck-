@@ -3,6 +3,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -21,79 +22,116 @@ import scripts.game.Game;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class InGameUI {
-    private final Stage uiStage;
-    private final TextButtonStyle style;
-    private Table inGameUITable;
-    private ImageButton inGameUIBG;
-    boolean showing = false;
+    private final Stage inGameUIStage;
+    private Table inGameUITable;    
+    private Table inGameUITableBGShowing;
+    private Table inGameUITableBGHidden;
 
-    private static final float barHeight = 250;
+    private Image inGameUIBG;
+    private ImageButton inGameUIBGControlButtonDown;
+    private ImageButton inGameUIBGControlButtonUp;
+
+
+    private Skin InGameUIButtinBarBG;
+    private Skin inGameUIBGControlDown;
+    private Skin inGameUIBGControlUp;
+    boolean showing = false;
 
     private TextButton nodesButton, usersButton, errorsButton, menuButton;
 
-    Skin skin;
 
-    public InGameUI(Stage stage, BitmapFont font) {
-        this.uiStage = stage;
+    public InGameUI(Stage stage) {
+        this.inGameUIStage = stage;
 
-        skin = new Skin();
-        skin.add("Placeholder", font, BitmapFont.class);
-        skin.addRegions(new TextureAtlas(Gdx.files.internal("src/assets/skin/skin.atlas")));
-        skin.load(Gdx.files.internal("src/assets/skin/skin.json"));
-
-        inGameUIBG = new ImageButton(skin);
-
-        style = new TextButtonStyle();
-        style.font = font;
+        InGameUIButtinBarBG = new Skin(Gdx.files.internal("src/assets/skin/InGameUIButtinBarBG.json"));
+        inGameUIBGControlDown = new Skin(Gdx.files.internal("src/assets/skin/InGameUIBottomBarBGControlDown.json"));
+        inGameUIBGControlUp = new Skin(Gdx.files.internal("src/assets/skin/InGameUIBottomBarBGControlUp.json"));
 
         initBottomBar();
     }
 
     public void initBottomBar(){
 
+        inGameUIBGControlButtonDown = new ImageButton(inGameUIBGControlDown);
+        inGameUIBGControlButtonUp = new ImageButton(inGameUIBGControlUp);
+        inGameUIBG = new Image(InGameUIButtinBarBG.getDrawable("InGameUIBottomBarBG"));
+
         // nodesButton = new ImageButton("Nodes", style);
         // usersButton = new ImageButton("Users", style);
         // errorsButton = new ImageButton("Errors", style);
         // menuButton = new ImageButton("Menu", style);
 
-        // menuButton.addListener(new ChangeListener() {
-        //     @Override
-        //     public void changed(ChangeEvent event, Actor actor) {
-        //         unloadInGameUI();
-        //         Game.mainMenu.loadMainMenu();
-        //     }
-        // });
+        inGameUITableBGHidden = new Table();
+        inGameUITableBGHidden.bottom();
+        inGameUITableBGHidden.add(inGameUIBGControlButtonUp).height(30).width(50);
+        inGameUITableBGHidden.setFillParent(true);
+        inGameUITableBGHidden.setDebug(true);
+
+        inGameUITableBGShowing = new Table();
+        inGameUITableBGShowing.bottom();
+        inGameUITableBGShowing.add(inGameUIBGControlButtonDown).height(30).width(50);
+        inGameUITableBGShowing.row();
+        inGameUITableBGShowing.add(inGameUIBG).growX().height(100);
+        inGameUITableBGShowing.setFillParent(true);
+        inGameUITableBGShowing.setDebug(true);
+
+        inGameUIBGControlButtonDown.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                hideInGameUI();
+            }
+        });
+
+        inGameUIBGControlButtonUp.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                showInGameUI();
+            }
+        });
 
         inGameUITable = new Table();
-        inGameUITable.align(Align.bottomRight);
-        // inGameUITable.add(nodesButton).width(200).height(100).pad(10);
-        // inGameUITable.add(usersButton).width(200).height(100).pad(10);
-        // inGameUITable.add(errorsButton).width(200).height(100).pad(10);
-        // inGameUITable.add(menuButton).width(200).height(100).pad(10);
-        // inGameUITable.setFillParent(true);
+        inGameUITable.align(Align.bottom);
+        inGameUITable.add(nodesButton).width(90).height(90).pad(0, 15, 3,15);
+        inGameUITable.add(usersButton).width(90).height(90).pad(0, 15, 3,15);
+        inGameUITable.add(errorsButton).width(90).height(90).pad(0, 15, 3,15);
+        inGameUITable.add(menuButton).width(90).height(90).pad(0, 15, 3,15);
+        inGameUITable.setFillParent(true);
         inGameUITable.setDebug(true);
 
     }
 
-
-    public void loadInGameUI(){
-        Game.multiplexer.addProcessor(0, uiStage);
-        uiStage.addActor(inGameUITable);
+    public void showInGameUI() {
+        Game.multiplexer.removeProcessor(inGameUIStage);
+        Game.multiplexer.addProcessor(0, inGameUIStage);
+        inGameUITableBGHidden.remove();
+        inGameUIStage.addActor(inGameUITable);
+        inGameUIStage.addActor(inGameUITableBGShowing);
         showing = true;
     }
 
-    public void unloadInGameUI(){
-        Game.multiplexer.removeProcessor(uiStage);
+    public void hideInGameUI() {
+        Game.multiplexer.removeProcessor(inGameUIStage);
+        Game.multiplexer.addProcessor(0, inGameUIStage);
         inGameUITable.remove();
+        inGameUITableBGShowing.remove();
+        inGameUIStage.addActor(inGameUITableBGHidden);
         showing = false;
     }
+
+    public void hideAllInGameUI() {
+        inGameUITable.remove();
+        inGameUITableBGShowing.remove();
+        inGameUITableBGHidden.remove();
+        Game.multiplexer.removeProcessor(inGameUIStage);
+        showing = false;
+    }
+
 
     public boolean isLoaded(){
         return showing;
     }
 
     public void dispose(){
-        skin.remove("Transparent", BitmapFont.class);
-        skin.dispose();
+        InGameUIButtinBarBG.dispose();
     }
 }

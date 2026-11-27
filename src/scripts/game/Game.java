@@ -72,12 +72,13 @@ public class Game implements ApplicationListener {
         
         inputHandler = new InputHandler();
         multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(inputHandler);
         Gdx.input.setInputProcessor(multiplexer);;
  
         node = new Texture("src/assets/placeholderNode.png");
  
-        mainMenu = new MainMenuUI(mainMenuUIStage, font);
-        inGameUI = new InGameUI(inGameUIStage, font);
+        mainMenu = new MainMenuUI(mainMenuUIStage);
+        inGameUI = new InGameUI(inGameUIStage);
         mainMenu.loadMainMenu();
     }
  
